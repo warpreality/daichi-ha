@@ -1,7 +1,7 @@
 # Daichi Comfort Cloud для Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
-[![GitHub Release](https://img.shields.io/github/release/yourusername/daichi-ha.svg?style=flat-square)](https://github.com/yourusername/daichi-ha/releases)
+[![GitHub Release](https://img.shields.io/github/release/warpreality/daichi-ha.svg?style=flat-square)](https://github.com/warpreality/daichi-ha/releases)
 
 Интеграция Home Assistant для управления кондиционерами Daichi через Comfort Cloud API.
 
