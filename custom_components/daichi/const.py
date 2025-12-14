@@ -67,17 +67,17 @@ FAN_MODE_TO_FUNCTION_ID = {
 }
 
 # Preset modes (дополнительные режимы работы)
+# Note: Comfortable Sleep requires additional parameters (temp, sleepTime)
+# so it cannot be activated via simple preset, it's not included here.
 PRESET_NONE = "none"
 PRESET_ECO = "eco"
 PRESET_TURBO = "turbo"
 PRESET_SLEEP = "sleep"
-PRESET_COMFORT_SLEEP = "comfort_sleep"
 
 PRESET_MODE_TO_FUNCTION_ID = {
     PRESET_ECO: FUNCTION_ID_ECO,
     PRESET_TURBO: FUNCTION_ID_TURBO,
     PRESET_SLEEP: FUNCTION_ID_SLEEP,
-    PRESET_COMFORT_SLEEP: FUNCTION_ID_COMFORTABLE_SLEEP,
 }
 
 # Swing modes

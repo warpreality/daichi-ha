@@ -33,14 +33,12 @@ from .const import (
     FUNCTION_ID_ECO,
     FUNCTION_ID_TURBO,
     FUNCTION_ID_SLEEP,
-    FUNCTION_ID_COMFORTABLE_SLEEP,
     HVAC_MODE_TO_FUNCTION_ID,
     FAN_MODE_TO_FUNCTION_ID,
     PRESET_NONE,
     PRESET_ECO,
     PRESET_TURBO,
     PRESET_SLEEP,
-    PRESET_COMFORT_SLEEP,
     PRESET_MODE_TO_FUNCTION_ID,
     SWING_OFF,
     SWING_VERTICAL,
@@ -134,7 +132,6 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
             PRESET_ECO,
             PRESET_TURBO,
             PRESET_SLEEP,
-            PRESET_COMFORT_SLEEP,
         ]
         self._attr_swing_modes: list[str] = [
             SWING_OFF,
@@ -349,8 +346,6 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
                             return PRESET_TURBO
                         elif func_id == FUNCTION_ID_SLEEP:
                             return PRESET_SLEEP
-                        elif func_id == FUNCTION_ID_COMFORTABLE_SLEEP:
-                            return PRESET_COMFORT_SLEEP
         
         # Check iconNames for preset modes
         state = device_data.get("state", {})
@@ -363,8 +358,8 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
             return PRESET_TURBO
         elif "sleep_active" in icon_names:
             return PRESET_SLEEP
-        elif "comfortableSleep_active" in icon_names:
-            return PRESET_COMFORT_SLEEP
+        # Note: Comfortable Sleep is shown in UI but not settable via preset
+        # as it requires additional parameters (temp, sleepTime)
         
         return PRESET_NONE
 
