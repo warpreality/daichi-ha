@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any
 
 from homeassistant.components.climate import (
@@ -235,31 +236,25 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
     def hvac_mode(self) -> HVACMode:
         """Return current HVAC mode."""
         if not self.coordinator.data:
-            _LOGGER.debug("hvac_mode: no coordinator data")
             return HVACMode.OFF
             
         device_data = self.coordinator.data.get(self._device_id, {})
         if not device_data:
-            _LOGGER.debug("hvac_mode: no device_data for %s", self._device_id)
             return HVACMode.OFF
             
         state = device_data.get("state", {})
         if not state:
-            _LOGGER.debug("hvac_mode: no state in device_data for %s", self._device_id)
             return HVACMode.OFF
         
         # Check if device is on
         is_on = state.get("isOn", False)
         
         if not is_on:
-            _LOGGER.debug("hvac_mode: device %s is off", self._device_id)
             return HVACMode.OFF
         
         # Determine mode from iconNames in state.info
         info = state.get("info", {})
         icon_names = info.get("iconNames", [])
-        
-        _LOGGER.debug("hvac_mode: device %s iconNames: %s", self._device_id, icon_names)
         
         # Map iconNames to HVAC modes
         if "modeCool_active" in icon_names:
@@ -272,10 +267,9 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
             return HVACMode.FAN_ONLY
         elif "modeAuto_active" in icon_names:
             return HVACMode.AUTO
-        else:
-            # Default to auto if device is on but mode is unclear
-            _LOGGER.debug("hvac_mode: device %s mode unclear, defaulting to AUTO", self._device_id)
-            return HVACMode.AUTO
+        
+        # Default to auto if device is on but mode is unclear
+        return HVACMode.AUTO
 
     @property
     def fan_mode(self) -> str | None:
@@ -315,10 +309,16 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
         if "fanSpeedAuto_active" in icon_names:
             return "auto"
         
-        # Try to find fan speed in iconNames (fanSpeed1_active, fanSpeed2_active, etc.)
+        # Try to find fan speed in iconNames
+        # Format can be: "fanSpeed3_active" or "fanSpeedM5V4_active" (M5=5 speeds, V4=value 4)
         for icon_name in icon_names:
             if icon_name.startswith("fanSpeed") and icon_name.endswith("_active"):
-                # Extract number from "fanSpeed3_active"
+                # Try new format first: fanSpeedM5V4_active -> speed 4
+                match = re.search(r'fanSpeedM\d+V(\d+)_active', icon_name)
+                if match:
+                    return match.group(1)
+                
+                # Try old format: fanSpeed3_active -> speed 3
                 speed_str = icon_name.replace("fanSpeed", "").replace("_active", "")
                 if speed_str.isdigit():
                     return speed_str
