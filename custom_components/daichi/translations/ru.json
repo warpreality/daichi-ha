@@ -1,0 +1,65 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Настройка Daichi Comfort Cloud",
+        "description": "Введите данные для подключения к Daichi Comfort Cloud",
+        "data": {
+          "username": "Email",
+          "password": "Пароль",
+          "daichi_api": "URL API (опционально)"
+        },
+        "data_description": {
+          "username": "Email адрес для входа в Daichi Comfort Cloud",
+          "password": "Пароль для входа в Daichi Comfort Cloud",
+          "daichi_api": "URL API Daichi (по умолчанию: https://web.daichicloud.ru/api/v4)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Не удалось подключиться к Daichi API",
+      "invalid_auth": "Неверные учетные данные",
+      "unknown": "Произошла неизвестная ошибка"
+    },
+    "abort": {
+      "already_configured": "Устройство уже настроено"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Температура в помещении"
+      },
+      "outdoor_temperature": {
+        "name": "Температура на улице"
+      },
+      "humidity": {
+        "name": "Влажность"
+      }
+    },
+    "climate": {
+      "daichi": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "Нет",
+              "eco": "Эко",
+              "turbo": "Турбо",
+              "sleep": "Сон",
+              "comfort_sleep": "Комфортный сон"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Выкл",
+              "vertical": "Вертикальное",
+              "horizontal": "Горизонтальное",
+              "both": "Оба направления"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
