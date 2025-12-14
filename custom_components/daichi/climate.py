@@ -235,25 +235,31 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
     def hvac_mode(self) -> HVACMode:
         """Return current HVAC mode."""
         if not self.coordinator.data:
+            _LOGGER.debug("hvac_mode: no coordinator data")
             return HVACMode.OFF
             
         device_data = self.coordinator.data.get(self._device_id, {})
         if not device_data:
+            _LOGGER.debug("hvac_mode: no device_data for %s", self._device_id)
             return HVACMode.OFF
             
         state = device_data.get("state", {})
         if not state:
+            _LOGGER.debug("hvac_mode: no state in device_data for %s", self._device_id)
             return HVACMode.OFF
         
         # Check if device is on
         is_on = state.get("isOn", False)
         
         if not is_on:
+            _LOGGER.debug("hvac_mode: device %s is off", self._device_id)
             return HVACMode.OFF
         
         # Determine mode from iconNames in state.info
         info = state.get("info", {})
         icon_names = info.get("iconNames", [])
+        
+        _LOGGER.debug("hvac_mode: device %s iconNames: %s", self._device_id, icon_names)
         
         # Map iconNames to HVAC modes
         if "modeCool_active" in icon_names:
@@ -268,6 +274,7 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
             return HVACMode.AUTO
         else:
             # Default to auto if device is on but mode is unclear
+            _LOGGER.debug("hvac_mode: device %s mode unclear, defaulting to AUTO", self._device_id)
             return HVACMode.AUTO
 
     @property
