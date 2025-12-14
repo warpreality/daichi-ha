@@ -446,6 +446,57 @@ class DaichiApiClient:
                 "POST", url_with_params, json=payload, headers=self._get_headers()
             )
             async with response:
+                if response.status == 409:
+                    # Conflict - need to resolve (e.g., cancel Comfortable Sleep)
+                    conflict_data = await response.json()
+                    _LOGGER.debug(
+                        "Conflict detected for device %s: %s",
+                        device_id,
+                        conflict_data.get("title", "Unknown conflict"),
+                    )
+                    
+                    # Extract conflictResolveData from the response
+                    actions = conflict_data.get("actions", [])
+                    for action in actions:
+                        if action.get("behaviour") == "REQUEST" and action.get("conflictResolveData"):
+                            conflict_resolve_data = action["conflictResolveData"]
+                            _LOGGER.info(
+                                "Auto-resolving conflict for device %s: %s",
+                                device_id,
+                                conflict_data.get("title"),
+                            )
+                            
+                            # Retry the request with conflictResolveData
+                            payload["conflictResolveData"] = conflict_resolve_data
+                            retry_response = await self._request_with_retry(
+                                "POST", url_with_params, json=payload, headers=self._get_headers()
+                            )
+                            async with retry_response:
+                                if retry_response.status != 200:
+                                    retry_error = await retry_response.text()
+                                    _LOGGER.error(
+                                        "Failed to resolve conflict: %s - %s",
+                                        retry_response.status,
+                                        retry_error,
+                                    )
+                                    raise CannotConnect(f"Failed to resolve conflict: {retry_response.status}")
+                                
+                                result = await retry_response.json()
+                                _LOGGER.debug(
+                                    "Conflict resolved for device %s, function %s",
+                                    device_id,
+                                    function_id,
+                                )
+                                return result
+                    
+                    # No resolvable action found
+                    _LOGGER.error(
+                        "Cannot resolve conflict for device %s: %s",
+                        device_id,
+                        conflict_data.get("title"),
+                    )
+                    raise CannotConnect(f"Conflict cannot be resolved: {conflict_data.get('title')}")
+                
                 if response.status != 200:
                     error_text = await response.text()
                     _LOGGER.error(
