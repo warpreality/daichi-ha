@@ -67,7 +67,7 @@ cp -r custom_components/daichi /config/custom_components/
 | Eco режим | ✅ |
 | Turbo режим | ✅ |
 | Sleep режим | ✅ |
-| Comfort Sleep | ✅ |
+| Comfort Sleep | [ ] |
 | Вертикальное качание | ✅ |
 | Горизонтальное качание | ✅ |
 | 3D качание | ✅ |
@@ -83,22 +83,6 @@ logger:
   default: info
   logs:
     custom_components.daichi: debug
-```
-
-## 🧪 Тестирование API
-
-Для тестирования API без Home Assistant используйте скрипт:
-
-```bash
-# Установите зависимости
-pip install aiohttp
-
-# Задайте учетные данные через переменные окружения
-export DAICHI_USERNAME="your_email@example.com"
-export DAICHI_PASSWORD="your_password"
-
-# Запустите тест
-python test_api_updated.py
 ```
 
 ## 📁 Структура проекта
@@ -136,5 +120,5 @@ MIT License - см. файл [LICENSE](LICENSE)
 Если у вас возникли проблемы:
 
 1. Включите debug логирование
-2. Проверьте [Issues](https://github.com/yourusername/daichi-ha/issues)
+2. Проверьте [Issues](https://github.com/warpreality/daichi-ha/issues)
 3. Создайте новый Issue с описанием проблемы и логами
