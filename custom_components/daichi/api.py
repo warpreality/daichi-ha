@@ -44,7 +44,6 @@ class DaichiApiClient:
         """Initialize the API client."""
         self.username = username
         self.password = password
-        # Убираем trailing slash для удобства конкатенации
         base_url = daichi_api or "https://web.daichicloud.ru/api/v4"
         self.daichi_api = base_url.rstrip("/")
         self._session: aiohttp.ClientSession | None = None
