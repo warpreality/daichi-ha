@@ -379,6 +379,18 @@ class DaichiApiClient:
             function_id: Function ID (see FUNCTION_IDS.md for list)
             value: Value to set (can be int, bool, or None for some functions)
             parameters: Optional parameters for functions that require them
+            
+        API payload format:
+            {
+                "cmdId": <random_int>,
+                "value": {
+                    "functionId": <function_id>,
+                    "isOn": true/false (for power/mode functions),
+                    "value": <number> (for temperature),
+                    "parameters": null or {...}
+                },
+                "conflictResolveData": null
+            }
         """
         try:
             url = f"{self.daichi_api}/devices/{device_id}/ctrl"
@@ -386,14 +398,44 @@ class DaichiApiClient:
             # Generate unique command ID
             cmd_id = self._generate_cmd_id()
             
+            # Build the "value" object based on function type
+            value_obj: dict[str, Any] = {
+                "functionId": function_id,
+                "parameters": parameters,
+            }
+            
+            # Power (350) and mode functions (352=Cool, 353=Heat, etc.) use "isOn"
+            # Temperature (351) and fan speed use "value"
+            if function_id == FUNCTION_ID_POWER:
+                # Power on/off uses isOn
+                value_obj["isOn"] = bool(value) if value is not None else True
+            elif function_id in (FUNCTION_ID_COOL, FUNCTION_ID_HEAT, FUNCTION_ID_AUTO, 
+                                 FUNCTION_ID_DRY, FUNCTION_ID_FAN):
+                # Mode functions use isOn: true to activate
+                value_obj["isOn"] = True
+            elif function_id == FUNCTION_ID_TEMPERATURE:
+                # Temperature uses value
+                value_obj["value"] = value
+            elif function_id == FUNCTION_ID_FAN_SPEED:
+                # Fan speed uses value
+                value_obj["value"] = value
+            elif function_id == FUNCTION_ID_FAN_SPEED_AUTO:
+                # Auto fan speed uses isOn
+                value_obj["isOn"] = True
+            else:
+                # For other functions (presets, swing, etc.) use isOn
+                # as they are toggle-style functions
+                if isinstance(value, bool):
+                    value_obj["isOn"] = value
+                elif value is not None:
+                    value_obj["value"] = value
+                else:
+                    value_obj["isOn"] = True
+            
             # Build request payload according to API structure
             payload = {
                 "cmdId": cmd_id,
-                "value": {
-                    "functionId": function_id,
-                    "value": value,
-                    "parameters": parameters,
-                },
+                "value": value_obj,
                 "conflictResolveData": None,
             }
             

@@ -23,7 +23,7 @@
 2. Перейдите в HACS → Интеграции
 3. Нажмите ⋮ → Пользовательские репозитории
 4. Добавьте репозиторий:
-   - URL: `https://github.com/yourusername/daichi-ha`
+   - URL: `https://github.com/warpreality/daichi-ha`
    - Категория: Интеграция
 5. Найдите "Daichi Comfort Cloud" и нажмите "Установить"
 6. Перезагрузите Home Assistant
