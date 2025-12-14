@@ -1,0 +1,65 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Daichi Comfort Cloud Setup",
+        "description": "Enter your Daichi Comfort Cloud credentials",
+        "data": {
+          "username": "Email",
+          "password": "Password",
+          "daichi_api": "API URL (optional)"
+        },
+        "data_description": {
+          "username": "Email address for Daichi Comfort Cloud login",
+          "password": "Password for Daichi Comfort Cloud login",
+          "daichi_api": "Daichi API URL (default: https://web.daichicloud.ru/api/v4)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to Daichi API",
+      "invalid_auth": "Invalid credentials",
+      "unknown": "Unknown error occurred"
+    },
+    "abort": {
+      "already_configured": "Device is already configured"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Indoor Temperature"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor Temperature"
+      },
+      "humidity": {
+        "name": "Humidity"
+      }
+    },
+    "climate": {
+      "daichi": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "None",
+              "eco": "Eco",
+              "turbo": "Turbo",
+              "sleep": "Sleep",
+              "comfort_sleep": "Comfort Sleep"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Off",
+              "vertical": "Vertical",
+              "horizontal": "Horizontal",
+              "both": "Both"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

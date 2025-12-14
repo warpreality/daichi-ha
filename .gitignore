@@ -39,9 +39,10 @@ uv.lock
 .cursor/
 
 # Testing
-*.json
-!custom_components/daichi/strings.json
 device_*_state.json
+
+# Keep JSON files in custom_components
+!custom_components/**/*.json
 
 # OS
 .DS_Store
