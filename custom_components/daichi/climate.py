@@ -281,27 +281,7 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
         if not device_data:
             return "auto"
         
-        # Try to get from pult functions first (most reliable)
-        pult = device_data.get("pult", [])
-        for section in pult:
-            if section.get("title") == "Fan speed":
-                functions = section.get("functions", [])
-                for func in functions:
-                    func_id = func.get("id")
-                    func_state = func.get("state", {})
-                    
-                    # Check if Auto is active
-                    if func_id == FUNCTION_ID_FAN_SPEED_AUTO:
-                        if func_state.get("isOn", False):
-                            return "auto"
-                    
-                    # Get fan speed value (1-5)
-                    if func_id == FUNCTION_ID_FAN_SPEED:
-                        speed_value = func_state.get("value")
-                        if speed_value is not None:
-                            return str(speed_value)
-        
-        # Fallback: determine from iconNames
+        # First check iconNames - most reliable source of current state
         state = device_data.get("state", {})
         info = state.get("info", {})
         icon_names = info.get("iconNames", [])
@@ -322,6 +302,25 @@ class DaichiClimateEntity(CoordinatorEntity[DaichiDataUpdateCoordinator], Climat
                 speed_str = icon_name.replace("fanSpeed", "").replace("_active", "")
                 if speed_str.isdigit():
                     return speed_str
+        
+        # Fallback: get from pult functions
+        pult = device_data.get("pult", [])
+        for section in pult:
+            functions = section.get("functions", [])
+            for func in functions:
+                func_id = func.get("id")
+                func_state = func.get("state", {})
+                
+                # Check if Auto is active
+                if func_id == FUNCTION_ID_FAN_SPEED_AUTO:
+                    if func_state.get("isOn", False):
+                        return "auto"
+                
+                # Get fan speed value (1-5)
+                if func_id == FUNCTION_ID_FAN_SPEED:
+                    speed_value = func_state.get("value")
+                    if speed_value is not None:
+                        return str(speed_value)
         
         return "auto"
 
