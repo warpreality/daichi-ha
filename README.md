@@ -1,82 +1,82 @@
-# Daichi Comfort Cloud для Home Assistant
+# Daichi Comfort Cloud for Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/release/warpreality/daichi-ha.svg?style=flat-square)](https://github.com/warpreality/daichi-ha/releases)
 
-Интеграция Home Assistant для управления кондиционерами Daichi через Comfort Cloud API.
+Home Assistant integration for controlling Daichi AC units via the Comfort Cloud API.
 
-## ✅ Возможности
+## ✅ Features
 
-- 🌡️ **Управление температурой** (16-30°C)
-- ❄️ **Режимы работы**: охлаждение, обогрев, вентиляция, осушение, авто
-- 💨 **Скорость вентилятора**: auto, 1-5
-- 🔄 **Preset режимы**: eco, turbo, sleep, comfort sleep
-- 🎯 **Swing режимы**: вертикальный, горизонтальный, 3D
-- 📊 **Сенсоры**: температура в помещении, на улице, влажность
-- 🔄 Автоматическое обновление состояния каждые 60 секунд
+- 🌡️ **Temperature control** (16-30°C)
+- ❄️ **Operating modes**: cool, heat, fan, dry, auto
+- 💨 **Fan speed**: auto, 1-5
+- 🔄 **Preset modes**: eco, turbo, sleep, comfort sleep
+- 🎯 **Swing modes**: vertical, horizontal, 3D
+- 📊 **Sensors**: indoor temperature, outdoor temperature, humidity
+- 🔄 Automatic state refresh every 60 seconds
 
-## 📦 Установка
+## 📦 Installation
 
-### Через HACS (рекомендуется)
+### Via HACS (recommended)
 
-1. Убедитесь, что у вас установлен [HACS](https://hacs.xyz/)
-2. Перейдите в HACS → Интеграции
-3. Нажмите ⋮ → Пользовательские репозитории
-4. Добавьте репозиторий:
+1. Make sure you have [HACS](https://hacs.xyz/) installed
+2. Go to HACS → Integrations
+3. Click ⋮ → Custom repositories
+4. Add the repository:
    - URL: `https://github.com/warpreality/daichi-ha`
-   - Категория: Интеграция
-5. Найдите "Daichi Comfort Cloud" и нажмите "Установить"
-6. Перезагрузите Home Assistant
+   - Category: Integration
+5. Find "Daichi Comfort Cloud" and click "Install"
+6. Restart Home Assistant
 
-### Ручная установка
+### Manual installation
 
 ```bash
-# Скопируйте папку custom_components/daichi в ваш Home Assistant
+# Copy custom_components/daichi into your Home Assistant
 cp -r custom_components/daichi /config/custom_components/
 ```
 
-Перезагрузите Home Assistant.
+Restart Home Assistant.
 
-## ⚙️ Настройка
+## ⚙️ Configuration
 
-1. Перейдите в **Настройки** → **Устройства и службы**
-2. Нажмите **Добавить интеграцию**
-3. Найдите **Daichi Comfort Cloud**
-4. Введите ваши учетные данные:
-   - **Email**: ваш email для входа в Daichi Comfort Cloud
-   - **Пароль**: ваш пароль
+1. Go to **Settings** → **Devices & Services**
+2. Click **Add integration**
+3. Find **Daichi Comfort Cloud**
+4. Enter your credentials:
+   - **Email**: the email you use for Daichi Comfort Cloud
+   - **Password**: your password
 
-## 🎮 Поддерживаемые устройства
+## 🎮 Supported devices
 
-Интеграция работает со всеми кондиционерами Daichi/Midea, подключенными к Comfort Cloud:
-- Midea Breezeless серия
-- И другие модели, поддерживаемые Daichi Cloud
+Works with all Daichi/Midea AC units connected to Comfort Cloud:
+- Midea Breezeless series
+- And other models supported by Daichi Cloud
 
-## 📋 Поддерживаемые функции
+## 📋 Supported features
 
-| Функция | Статус |
+| Feature | Status |
 |---------|--------|
-| Включение/выключение | ✅ |
-| Установка температуры | ✅ |
-| Режим охлаждения | ✅ |
-| Режим обогрева | ✅ |
-| Режим вентиляции | ✅ |
-| Режим осушения | ✅ |
-| Автоматический режим | ✅ |
-| Скорость вентилятора (auto, 1-5) | ✅ |
-| Eco режим | ✅ |
-| Turbo режим | ✅ |
-| Sleep режим | ✅ |
+| Power on/off | ✅ |
+| Set temperature | ✅ |
+| Cooling mode | ✅ |
+| Heating mode | ✅ |
+| Fan-only mode | ✅ |
+| Dry mode | ✅ |
+| Auto mode | ✅ |
+| Fan speed (auto, 1-5) | ✅ |
+| Eco mode | ✅ |
+| Turbo mode | ✅ |
+| Sleep mode | ✅ |
 | Comfort Sleep | [ ] |
-| Вертикальное качание | ✅ |
-| Горизонтальное качание | ✅ |
-| 3D качание | ✅ |
-| Сенсор температуры | ✅ |
-| Сенсор влажности | ✅ |
+| Vertical swing | ✅ |
+| Horizontal swing | ✅ |
+| 3D swing | ✅ |
+| Temperature sensor | ✅ |
+| Humidity sensor | ✅ |
 
-## 🔧 Отладка
+## 🔧 Debugging
 
-Для включения подробного логирования добавьте в `configuration.yaml`:
+To enable verbose logging, add to `configuration.yaml`:
 
 ```yaml
 logger:
@@ -85,40 +85,40 @@ logger:
     custom_components.daichi: debug
 ```
 
-## 📁 Структура проекта
+## 📁 Project structure
 
 ```
 custom_components/
   daichi/
-    __init__.py          # Инициализация интеграции
-    manifest.json        # Метаданные
-    config_flow.py       # Настройка через UI
-    const.py             # Константы и Function IDs
-    api.py               # API клиент
-    coordinator.py       # Координатор обновления данных
+    __init__.py          # Integration setup
+    manifest.json        # Metadata
+    config_flow.py       # UI setup flow
+    const.py             # Constants and Function IDs
+    api.py               # API client
+    coordinator.py       # Data update coordinator
     climate.py           # Climate entity
-    sensor.py            # Сенсоры
-    exceptions.py        # Исключения
-    translations/        # Переводы
+    sensor.py            # Sensors
+    exceptions.py        # Exceptions
+    translations/        # Translations
 ```
 
-## 📖 Документация API
+## 📖 API docs
 
-Полный список Function IDs для управления устройствами см. в [FUNCTION_IDS.md](FUNCTION_IDS.md).
+For the full list of Function IDs for device control, see [FUNCTION_IDS.md](FUNCTION_IDS.md).
 
-## ⚠️ Известные ограничения
+## ⚠️ Known limitations
 
-- MQTT поддержка для real-time обновлений пока не реализована
-- Некоторые функции могут быть недоступны для определённых моделей кондиционеров
+- MQTT support for real-time updates is not implemented yet
+- Some functions may be unavailable on specific AC models
 
-## 📄 Лицензия
+## 📄 License
 
-MIT License - см. файл [LICENSE](LICENSE)
+MIT License - see [LICENSE](LICENSE)
 
-## 🤝 Поддержка
+## 🤝 Support
 
-Если у вас возникли проблемы:
+If you run into issues:
 
-1. Включите debug логирование
-2. Проверьте [Issues](https://github.com/warpreality/daichi-ha/issues)
-3. Создайте новый Issue с описанием проблемы и логами
+1. Enable debug logging
+2. Check [Issues](https://github.com/warpreality/daichi-ha/issues)
+3. Open a new issue with details and logs
