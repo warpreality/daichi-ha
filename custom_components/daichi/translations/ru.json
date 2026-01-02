@@ -45,8 +45,7 @@
               "none": "Нет",
               "eco": "Эко",
               "turbo": "Турбо",
-              "sleep": "Сон",
-              "comfort_sleep": "Комфортный сон"
+              "sleep": "Сон"
             }
           },
           "swing_mode": {

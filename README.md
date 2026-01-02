@@ -67,7 +67,6 @@ Works with all Daichi/Midea AC units connected to Comfort Cloud:
 | Eco mode | ✅ |
 | Turbo mode | ✅ |
 | Sleep mode | ✅ |
-| Comfort Sleep | [ ] |
 | Vertical swing | ✅ |
 | Horizontal swing | ✅ |
 | 3D swing | ✅ |
@@ -106,10 +105,6 @@ custom_components/
 
 For the full list of Function IDs for device control, see [FUNCTION_IDS.md](FUNCTION_IDS.md).
 
-## ⚠️ Known limitations
-
-- MQTT support for real-time updates is not implemented yet
-- Some functions may be unavailable on specific AC models
 
 ## 📄 License
 

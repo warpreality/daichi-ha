@@ -45,8 +45,7 @@
               "none": "None",
               "eco": "Eco",
               "turbo": "Turbo",
-              "sleep": "Sleep",
-              "comfort_sleep": "Comfort Sleep"
+              "sleep": "Sleep"
             }
           },
           "swing_mode": {
