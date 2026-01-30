@@ -12,7 +12,7 @@
         "data_description": {
           "username": "Email адрес для входа в Daichi Comfort Cloud",
           "password": "Пароль для входа в Daichi Comfort Cloud",
-          "daichi_api": "URL API Daichi (по умолчанию: https://web.daichicloud.ru/api/v4)"
+          "daichi_api": "URL API Daichi (Пусто - по умолчанию)"
         }
       }
     },
