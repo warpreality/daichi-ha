@@ -57,10 +57,9 @@ class DaichiSoundOffSwitch(DaichiEntity, SwitchEntity):
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn sound off (enable silent mode)."""
         try:
-            await self.coordinator.api.async_control_device(
+            await self.coordinator.async_control_device_with_retry(
                 int(self._device_id), FUNCTION_ID_SOUND_OFF, True
             )
-            await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error(
                 "Failed to turn on sound off for device %s: %s",
@@ -72,10 +71,9 @@ class DaichiSoundOffSwitch(DaichiEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn sound on (disable silent mode)."""
         try:
-            await self.coordinator.api.async_control_device(
+            await self.coordinator.async_control_device_with_retry(
                 int(self._device_id), FUNCTION_ID_SOUND_OFF, False
             )
-            await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error(
                 "Failed to turn off sound off for device %s: %s",

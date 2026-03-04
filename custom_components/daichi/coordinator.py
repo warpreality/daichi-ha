@@ -1,6 +1,7 @@
 """Data update coordinator for Daichi."""
 from __future__ import annotations
 
+import asyncio
 import logging
 from datetime import timedelta
 from typing import Any
@@ -13,6 +14,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed
 
 from .api import DaichiApiClient
 from .const import UPDATE_INTERVAL
+from .device_control import verify_control_applied
 from .exceptions import CannotConnect, InvalidAuth
 
 _LOGGER = logging.getLogger(__name__)
@@ -78,3 +80,65 @@ class DaichiDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         except Exception as err:
             _LOGGER.exception("Unexpected error updating Daichi data")
             raise UpdateFailed(f"Unexpected error: {err}") from err
+
+    async def async_control_device_with_retry(
+        self,
+        device_id: int,
+        function_id: int,
+        value: int | bool | None = None,
+        parameters: dict[str, Any] | None = None,
+        max_retries: int = 2,
+        verify_delay: float = 1.5,
+    ) -> None:
+        """
+        Отправить команду устройству, обновить состояние и при необходимости повторить.
+        Если после отправки состояние не совпадает с ожидаемым — повторяет запрос до max_retries раз.
+        """
+        last_error: Exception | None = None
+        for attempt in range(max_retries + 1):
+            try:
+                await self.api.async_control_device(
+                    device_id, function_id, value, parameters
+                )
+            except Exception as err:
+                last_error = err
+                if attempt < max_retries:
+                    _LOGGER.debug(
+                        "Control command failed (attempt %s/%s), retrying: %s",
+                        attempt + 1,
+                        max_retries + 1,
+                        err,
+                    )
+                    continue
+                raise
+
+            await asyncio.sleep(verify_delay)
+            await self.async_request_refresh()
+            device_data = (self.data or {}).get(str(device_id), {})
+            if verify_control_applied(device_data, function_id, value):
+                if attempt > 0:
+                    _LOGGER.debug(
+                        "Command applied after retry %s for device %s function %s",
+                        attempt + 1,
+                        device_id,
+                        function_id,
+                    )
+                return
+
+            if attempt < max_retries:
+                _LOGGER.warning(
+                    "Command device %s function %s did not apply, retrying %s/%s",
+                    device_id,
+                    function_id,
+                    attempt + 1,
+                    max_retries + 1,
+                )
+            else:
+                _LOGGER.warning(
+                    "Command device %s function %s may not have applied after %s attempts",
+                    device_id,
+                    function_id,
+                    max_retries + 1,
+                )
+        if last_error:
+            raise last_error

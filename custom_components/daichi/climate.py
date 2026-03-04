@@ -345,10 +345,9 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
             return
 
         try:
-            await self.coordinator.api.async_control_device(
+            await self.coordinator.async_control_device_with_retry(
                 int(self._device_id), FUNCTION_ID_TEMPERATURE, int(temperature),
             )
-            await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Failed to set temperature for device %s: %s", self._device_id, err)
             raise
@@ -357,7 +356,7 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
         """Set new target HVAC mode."""
         if hvac_mode == HVACMode.OFF:
             try:
-                await self.coordinator.api.async_control_device(
+                await self.coordinator.async_control_device_with_retry(
                     int(self._device_id), FUNCTION_ID_POWER, False,
                 )
             except Exception as err:
@@ -368,7 +367,7 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
             current_mode = self.hvac_mode
             if current_mode == HVACMode.OFF:
                 try:
-                    await self.coordinator.api.async_control_device(
+                    await self.coordinator.async_control_device_with_retry(
                         int(self._device_id), FUNCTION_ID_POWER, True,
                     )
                 except Exception as err:
@@ -377,7 +376,7 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
             function_id = HVAC_MODE_TO_FUNCTION_ID.get(hvac_mode.value)
             if function_id:
                 try:
-                    await self.coordinator.api.async_control_device(
+                    await self.coordinator.async_control_device_with_retry(
                         int(self._device_id), function_id, None,
                     )
                 except Exception as err:
@@ -389,8 +388,6 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
             else:
                 _LOGGER.warning("Unknown HVAC mode: %s", hvac_mode)
 
-        await self.coordinator.async_request_refresh()
-
     async def async_set_fan_mode(self, fan_mode: str) -> None:
         """Set new target fan mode."""
         if fan_mode not in (self._attr_fan_modes or []):
@@ -399,15 +396,14 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
 
         try:
             if fan_mode == "auto":
-                await self.coordinator.api.async_control_device(
+                await self.coordinator.async_control_device_with_retry(
                     int(self._device_id), FUNCTION_ID_FAN_SPEED_AUTO, True,
                 )
             else:
                 speed_value = int(fan_mode)
-                await self.coordinator.api.async_control_device(
+                await self.coordinator.async_control_device_with_retry(
                     int(self._device_id), FUNCTION_ID_FAN_SPEED, speed_value,
                 )
-            await self.coordinator.async_request_refresh()
         except ValueError:
             _LOGGER.warning("Invalid fan mode value: %s", fan_mode)
         except Exception as err:
@@ -426,7 +422,7 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
                 func_id = PRESET_MODE_TO_FUNCTION_ID.get(current)
                 if func_id:
                     try:
-                        await self.coordinator.api.async_control_device(
+                        await self.coordinator.async_control_device_with_retry(
                             int(self._device_id), func_id, False,
                         )
                     except Exception:
@@ -435,11 +431,9 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
             if preset_mode != PRESET_NONE:
                 function_id = PRESET_MODE_TO_FUNCTION_ID.get(preset_mode)
                 if function_id:
-                    await self.coordinator.api.async_control_device(
+                    await self.coordinator.async_control_device_with_retry(
                         int(self._device_id), function_id, True,
                     )
-
-            await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Failed to set preset mode for device %s: %s", self._device_id, err)
             raise
@@ -456,7 +450,7 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
                 func_id = SWING_MODE_TO_FUNCTION_ID.get(current)
                 if func_id:
                     try:
-                        await self.coordinator.api.async_control_device(
+                        await self.coordinator.async_control_device_with_retry(
                             int(self._device_id), func_id, False,
                         )
                     except Exception:
@@ -465,11 +459,9 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
             if swing_mode != SWING_OFF:
                 function_id = SWING_MODE_TO_FUNCTION_ID.get(swing_mode)
                 if function_id:
-                    await self.coordinator.api.async_control_device(
+                    await self.coordinator.async_control_device_with_retry(
                         int(self._device_id), function_id, True,
                     )
-
-            await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Failed to set swing mode for device %s: %s", self._device_id, err)
             raise
