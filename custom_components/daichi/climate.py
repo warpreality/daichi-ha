@@ -364,12 +364,15 @@ class DaichiClimateEntity(DaichiEntity, ClimateEntity):
                 _LOGGER.error("Failed to turn off device %s: %s", self._device_id, err)
                 raise
         else:
-            try:
-                await self.coordinator.api.async_control_device(
-                    int(self._device_id), FUNCTION_ID_POWER, True,
-                )
-            except Exception as err:
-                _LOGGER.warning("Failed to turn on device %s: %s", self._device_id, err)
+            # Отправляем Power только если устройство выключено — иначе одна команда (режим)
+            current_mode = self.hvac_mode
+            if current_mode == HVACMode.OFF:
+                try:
+                    await self.coordinator.api.async_control_device(
+                        int(self._device_id), FUNCTION_ID_POWER, True,
+                    )
+                except Exception as err:
+                    _LOGGER.warning("Failed to turn on device %s: %s", self._device_id, err)
 
             function_id = HVAC_MODE_TO_FUNCTION_ID.get(hvac_mode.value)
             if function_id:
