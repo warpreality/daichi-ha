@@ -14,6 +14,13 @@
           "password": "Пароль для входа в Daichi Comfort Cloud",
           "daichi_api": "URL API Daichi (Пусто - по умолчанию)"
         }
+      },
+      "reauth_confirm": {
+        "title": "Повторная аутентификация Daichi",
+        "description": "Учётные данные Daichi устарели. Введите новый пароль.",
+        "data": {
+          "password": "Пароль"
+        }
       }
     },
     "error": {
@@ -22,7 +29,8 @@
       "unknown": "Произошла неизвестная ошибка"
     },
     "abort": {
-      "already_configured": "Устройство уже настроено"
+      "already_configured": "Аккаунт уже настроен",
+      "reauth_successful": "Повторная аутентификация успешна"
     }
   },
   "entity": {
