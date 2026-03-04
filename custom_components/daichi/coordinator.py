@@ -88,7 +88,7 @@ class DaichiDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         value: int | bool | None = None,
         parameters: dict[str, Any] | None = None,
         max_retries: int = 2,
-        verify_delay: float = 1.5,
+        verify_delay: float = 3.0,
     ) -> None:
         """
         Отправить команду устройству, обновить состояние и при необходимости повторить.
