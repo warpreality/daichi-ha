@@ -34,6 +34,11 @@
     }
   },
   "entity": {
+    "switch": {
+      "sound_off": {
+        "name": "Звук"
+      }
+    },
     "sensor": {
       "indoor_temperature": {
         "name": "Температура в помещении"
