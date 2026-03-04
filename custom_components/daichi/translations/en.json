@@ -36,7 +36,7 @@
   "entity": {
     "switch": {
       "sound_off": {
-        "name": "Sound"
+        "name": "Silent mode"
       }
     },
     "sensor": {
